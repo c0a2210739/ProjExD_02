@@ -32,8 +32,17 @@ def main():
     bc_rct.center = ran_x,ran_y
     vx = 5
     vy = 5
+    
     clock = pg.time.Clock()
     tmr = 0
+
+    accs = [a for a in range(1, 11)] # 加速度のリスト
+    enn_imgs = []
+    for r in range(1, 11):
+        enn_img = pg.Surface((20*r, 20*r), pg.SRCALPHA)
+        pg.draw.circle(enn_img, (255, 0, 0), (10*r, 10*r), 10*r)
+        enn_imgs.append(enn_img)
+
     kk_dic = {
         pg.K_UP:(0,-5),
         pg.K_DOWN:(0,5),
@@ -58,9 +67,7 @@ def main():
             if event.type == pg.QUIT: 
                 return
 
-        if kk_rct.colliderect(bc_rct):
-            print("ゲームオーバー")
-            return
+        
         screen.blit(bg_img, [0, 0])
 
         key_lst = pg.key.get_pressed()
@@ -69,30 +76,36 @@ def main():
             if key_lst[key]:
                 sum_mv[0] += mv[0]   #横合計移動量
                 sum_mv[1] += mv[1]   #縦   
+        #こうかとんの向きを変える
         for kk, mm in kk2_dic.items():
             if sum_mv[0] == kk[0] and sum_mv[1] == kk[1]:
                 kk_img= pg.transform.rotozoom(mm[0], mm[1], 1.0)
         screen.blit(kk_img, [kk_rct.x, kk_rct.y])
+
         kk_rct.move_ip(sum_mv[0],sum_mv[1])
 
         if check_bou(kk_rct) != (True,True):
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])  #元の位置に
         
-        """
-        for key,mv in kk_dic.items():
-            if key_lst[key]:
-                screen.blit(kk2_dic[mv],kk_rct)
-        """
-        screen.blit(enn,bc_rct)
+        
+        
         bc_rct.move_ip(vx,vy)
         yoko,tate = check_bou(bc_rct)
         if not yoko:
             vx *= -1
         if not tate:
             vy *= -1
+
+        enn_img = enn_imgs[min(tmr//500, 9)] # 時間とともに爆弾を拡大
+        screen.blit(enn_img, [bc_rct.x, bc_rct.y])
+        
+        if kk_rct.colliderect(bc_rct):
+            print("ゲームオーバー")
+            return
+        
         pg.display.update()
         tmr += 1
-        clock.tick(50)
+        clock.tick(100)
 
 
 if __name__ == "__main__":
