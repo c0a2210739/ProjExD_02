@@ -3,9 +3,18 @@ import pygame as pg
 import random
 
 
-WIDTH, HEIGHT = 1600, 900
+WIDTH, HEIGHT = 1200, 900
 
-
+def check_bou(obj_rct):
+    """
+    引数:こうかとんRect,爆弾Rect
+    """
+    yoko,tate = True,True
+    if obj_rct.left <= 0 or WIDTH <= obj_rct.right:
+        yoko = False
+    if obj_rct.top <= 0 or HEIGHT <= obj_rct.bottom:
+        tate = False
+    return yoko,tate
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -41,9 +50,16 @@ def main():
                 sum_mv[0] += mv[0]   #横合計移動量
                 sum_mv[1] += mv[1]   #縦
         kk_rct.move_ip(sum_mv[0],sum_mv[1])
+        if check_bou(kk_rct) != (True,True):
+            kk_rct.move_ip(-sum_mv[0],-sum_mv[1])  #元の位置に
         screen.blit(kk_img, kk_rct)
         screen.blit(enn,bc_rct)
-        bc_rct.move_ip(vx,vy)        
+        bc_rct.move_ip(vx,vy)
+        yoko,tate = check_bou(bc_rct)
+        if not yoko:
+            vx *= -1
+        if not tate:
+            vy *= -1
         pg.display.update()
         tmr += 1
         clock.tick(50)
