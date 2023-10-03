@@ -34,7 +34,24 @@ def main():
     vy = 5
     clock = pg.time.Clock()
     tmr = 0
-    kk_dic = {pg.K_UP:(0,-5),pg.K_DOWN:(0,5),pg.K_LEFT:(-5,0),pg.K_RIGHT:(5,0)}
+    kk_dic = {
+        pg.K_UP:(0,-5),
+        pg.K_DOWN:(0,5),
+        pg.K_LEFT:(-5,0),
+        pg.K_RIGHT:(5,0)
+        }
+    
+    kk2_dic = {
+        (0, 5): (pg.transform.flip(kk_img, True, False), -90),
+        (5, 5): (pg.transform.flip(kk_img, True, False), -45),
+        (5, 0): (pg.transform.flip(kk_img, True, False), 0),
+        (5, -5): (pg.transform.flip(kk_img, True, False), 45),
+        (0, -5): (pg.transform.flip(kk_img, True, False), 90),
+        (-5, 5): (kk_img, 45),
+        (-5, -5): (kk_img, -45),
+        (-5, 0): (kk_img, 0)
+    }
+
     key_lst = pg.key.get_pressed()
     while True:
         for event in pg.event.get():
@@ -51,11 +68,21 @@ def main():
         for key,mv in kk_dic.items():
             if key_lst[key]:
                 sum_mv[0] += mv[0]   #横合計移動量
-                sum_mv[1] += mv[1]   #縦
+                sum_mv[1] += mv[1]   #縦   
+        for kk, mm in kk2_dic.items():
+            if sum_mv[0] == kk[0] and sum_mv[1] == kk[1]:
+                kk_img= pg.transform.rotozoom(mm[0], mm[1], 1.0)
+        screen.blit(kk_img, [kk_rct.x, kk_rct.y])
         kk_rct.move_ip(sum_mv[0],sum_mv[1])
+
         if check_bou(kk_rct) != (True,True):
             kk_rct.move_ip(-sum_mv[0],-sum_mv[1])  #元の位置に
-        screen.blit(kk_img, kk_rct)
+        
+        """
+        for key,mv in kk_dic.items():
+            if key_lst[key]:
+                screen.blit(kk2_dic[mv],kk_rct)
+        """
         screen.blit(enn,bc_rct)
         bc_rct.move_ip(vx,vy)
         yoko,tate = check_bou(bc_rct)
