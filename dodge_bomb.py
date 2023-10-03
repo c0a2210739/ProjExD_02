@@ -1,6 +1,7 @@
 import sys
 import pygame as pg
 import random
+import math
 
 
 WIDTH, HEIGHT = 1600, 900
@@ -8,6 +9,8 @@ WIDTH, HEIGHT = 1600, 900
 def check_bou(obj_rct):
     """
     引数:こうかとんRect,爆弾Rect
+    戻り値：タプル（横方向判定結果，縦方向判定結果）
+    画面内ならTrue,画面外ならFalse
     """
     yoko,tate = True,True
     if obj_rct.left <= 0 or WIDTH <= obj_rct.right:
@@ -15,6 +18,7 @@ def check_bou(obj_rct):
     if obj_rct.top <= 0 or HEIGHT <= obj_rct.bottom:
         tate = False
     return yoko,tate
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -95,6 +99,7 @@ def main():
             vx *= -1
         if not tate:
             vy *= -1
+        
 
         enn_img = enn_imgs[min(tmr//500, 9)] # 時間とともに爆弾を拡大
         screen.blit(enn_img, [bc_rct.x, bc_rct.y])
@@ -105,7 +110,7 @@ def main():
         
         pg.display.update()
         tmr += 1
-        clock.tick(100)
+        clock.tick(50)
 
 
 if __name__ == "__main__":
