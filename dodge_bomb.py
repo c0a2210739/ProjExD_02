@@ -19,6 +19,8 @@ def main():
     ran_y = random.randint(0,900)
     bc_rct = enn.get_rect()
     bc_rct.center = ran_x,ran_y
+    vx = 5
+    vy = 5
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -29,9 +31,12 @@ def main():
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, [900, 400])
         screen.blit(enn,bc_rct)
+        bc_rct.move_ip(vx,vy)
+
+        
         pg.display.update()
         tmr += 1
-        clock.tick(5)
+        clock.tick(10)
 
 
 if __name__ == "__main__":
