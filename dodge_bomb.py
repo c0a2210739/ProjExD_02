@@ -3,7 +3,7 @@ import pygame as pg
 import random
 
 
-WIDTH, HEIGHT = 1200, 900
+WIDTH, HEIGHT = 1600, 900
 
 def check_bou(obj_rct):
     """
@@ -41,6 +41,9 @@ def main():
             if event.type == pg.QUIT: 
                 return
 
+        if kk_rct.colliderect(bc_rct):
+            print("ゲームオーバー")
+            return
         screen.blit(bg_img, [0, 0])
 
         key_lst = pg.key.get_pressed()
